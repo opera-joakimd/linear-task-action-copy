@@ -45,26 +45,34 @@ function run() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const TEAM_NAME = core.getInput('team', { required: true });
-            const PR_NAME = core.getInput('pr_name', { required: true });
+            const TEAM_NAME = core.getInput('team_name', { required: true });
+            const TITLE = core.getInput('title', { required: true });
             const API_KEY = core.getInput('key', { required: true });
             const client = new sdk_1.LinearClient({
                 apiKey: API_KEY,
             });
             const { nodes: teams } = yield client.teams();
-            const targetTeam = (_a = teams.find(({ name }) => name === 'action-test')) === null || _a === void 0 ? void 0 : _a.id;
-            if (!targetTeam) {
+            const teamId = (_a = teams.find(({ name }) => name === TEAM_NAME)) === null || _a === void 0 ? void 0 : _a.id;
+            if (!teamId) {
                 throw new Error(`No team found with name ${TEAM_NAME}`);
             }
-            const res = yield client.createIssue({
-                teamId: targetTeam,
-                title: PR_NAME,
-            });
-            const issue = yield res.issue;
-            if (!issue) {
-                throw new Error('Could not get info from created issue');
+            const team = yield client.team(teamId);
+            const issues = yield team.issues();
+            const duplicateIssue = issues.nodes.find((issue) => issue.title === TITLE);
+            if (duplicateIssue) {
+                core.setOutput('task_id', duplicateIssue.identifier);
             }
-            core.setOutput('task_id', issue.identifier);
+            else {
+                const res = yield client.createIssue({
+                    teamId,
+                    title: TITLE,
+                });
+                const issue = yield res.issue;
+                if (!issue) {
+                    throw new Error('Could not get info from created issue');
+                }
+                core.setOutput('task_id', issue.identifier);
+            }
         }
         catch (e) {
             if (e instanceof Error) {
