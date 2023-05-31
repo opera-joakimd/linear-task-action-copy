@@ -2,8 +2,8 @@
 
 ### Inputs
 
-- `team` : Name of the team for which the task should be created
-- `pr_name` : Name of the PR the task is being created for
+- `team_name` : Name of the team for which the task should be created
+- `title` : Title that should be used for the linear task
 - `key` : Api access key from linear
 
 ### Outputs
@@ -18,8 +18,8 @@
         id: task
         uses: opera-gaming/linear-task-action@main
         with:
-          team: "foo"
-          pr_name: "bar"
+          team_name: "foo"
+          title: "bar"
           key: ${{secrets.LINEAR_API_KEY}}
       - name: Get the task id
         run: echo "The task is ${{ steps.task.outputs.task_id }}"
