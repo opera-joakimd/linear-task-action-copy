@@ -1,0 +1,19 @@
+name: 'Linear task action'
+description: 'Creates a linear task and returns its id'
+author: 'opera-joakimd'
+inputs:
+  key:
+    required: true
+    description: 'Linear api key'
+  team:
+    required: true
+    description: 'Linear team name'
+  pr_name:
+    required: true
+    description: 'Name of the PR the task is being created for'
+outputs:
+  task_id:
+    description: 'Id of the created task'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
