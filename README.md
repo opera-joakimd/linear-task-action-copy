@@ -3,7 +3,7 @@
 ### Inputs
 
 - `team_name` : Name of the team for which the task should be created
-- `title` : Title that should be used for the linear task
+- `pr_name` : Name of the PR the task is being created for
 - `key` : Api access key from linear
 
 ### Outputs

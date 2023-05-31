@@ -8,9 +8,9 @@ inputs:
   team_name:
     required: true
     description: 'Linear team name'
-  title:
+  pr_name:
     required: true
-    description: 'Title of the linear task that should be created'
+    description: 'Name of the PR the task is being created for'
 outputs:
   task_id:
     description: 'Id of the created task'
