@@ -46,8 +46,13 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const TEAM_NAME = core.getInput('team_name', { required: true });
-            const TITLE = core.getInput('title', { required: true });
+            const PR_NAME = core.getInput('pr_name', { required: true });
             const API_KEY = core.getInput('key', { required: true });
+            const isPrefixed = /^[A-Z]{1,3}-[0-9]{1,}:/.test(PR_NAME);
+            if (isPrefixed) {
+                core.setOutput('task_id', PR_NAME.split(':')[0]);
+                return;
+            }
             const client = new sdk_1.LinearClient({
                 apiKey: API_KEY,
             });
@@ -58,21 +63,20 @@ function run() {
             }
             const team = yield client.team(teamId);
             const issues = yield team.issues();
-            const duplicateIssue = issues.nodes.find((issue) => issue.title === TITLE);
+            const duplicateIssue = issues.nodes.find((issue) => issue.title === PR_NAME);
             if (duplicateIssue) {
                 core.setOutput('task_id', duplicateIssue.identifier);
+                return;
             }
-            else {
-                const res = yield client.createIssue({
-                    teamId,
-                    title: TITLE,
-                });
-                const issue = yield res.issue;
-                if (!issue) {
-                    throw new Error('Could not get info from created issue');
-                }
-                core.setOutput('task_id', issue.identifier);
+            const res = yield client.createIssue({
+                teamId,
+                title: PR_NAME,
+            });
+            const issue = yield res.issue;
+            if (!issue) {
+                throw new Error('Could not get info from created issue');
             }
+            core.setOutput('task_id', issue.identifier);
         }
         catch (e) {
             if (e instanceof Error) {
