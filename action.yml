@@ -5,12 +5,12 @@ inputs:
   key:
     required: true
     description: 'Linear api key'
-  team:
+  team_name:
     required: true
     description: 'Linear team name'
-  pr_name:
+  title:
     required: true
-    description: 'Name of the PR the task is being created for'
+    description: 'Title of the linear task that should be created'
 outputs:
   task_id:
     description: 'Id of the created task'
